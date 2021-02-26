@@ -1,5 +1,6 @@
 import bs4
 import os
+import Article
 from copy import copy
 
 output_dirname = 'LARAVEL DOCS'

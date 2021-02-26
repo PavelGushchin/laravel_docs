@@ -19,8 +19,12 @@ def save(chapter_title, chapter_number, main_page_html):
     main_container.clear()
 
     for article_link in links_to_articles:
-        article = Article.get_content(article_link)
-        main_container.extend(article)
+        article_container = Article.get_container(article_link)
+
+        for tag in article_container.children:
+            if str(tag) == '\n':
+                continue
+            main_container.append(tag)
 
         br_tag = main_page.new_tag('br')
         main_container.append(br_tag)

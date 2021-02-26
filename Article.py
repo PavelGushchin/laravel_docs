@@ -1,8 +1,9 @@
 import bs4
 import requests
+from copy import copy
 
 
-def get_container(article_link):
+def get(article_link):
     article_html = requests.get(article_link).text
     soup = bs4.BeautifulSoup(article_html, 'lxml', parse_only=bs4.SoupStrainer('body'))
 
@@ -14,4 +15,10 @@ def get_container(article_link):
             continue
         a.append(f' (***{a["href"]}***) ')
 
-    return article_container
+    br_tag = soup.new_tag('br')
+    article_container.append(br_tag)
+    article_container.append(copy(br_tag))
+
+    article_tags = [tag for tag in article_container.children if str(tag) != '\n']
+
+    return article_tags

@@ -1,7 +1,6 @@
 import bs4
 import os
 import Article
-from copy import copy
 
 output_dirname = 'LARAVEL DOCS'
 os.makedirs(output_dirname, exist_ok=True)
@@ -21,16 +20,14 @@ def save(chapter_title, chapter_number, main_page_html):
     main_container.clear()
 
     for article_link in links_to_articles:
-        article_container = Article.get_container(article_link)
+        article = Article.get(article_link)
+        main_container.extend(article)
 
-        for tag in article_container.children:
-            if str(tag) == '\n':
-                continue
-            main_container.append(tag)
-
-        br_tag = main_page.new_tag('br')
-        main_container.append(br_tag)
-        main_container.append(copy(br_tag))
+    all_link_tags_with_hrefs = main_page.find_all('link', href=True)
+    for link_tag in all_link_tags_with_hrefs:
+        if link_tag['href'][0] != '/':
+            continue
+        link_tag['href'] = 'https://laravel.com' + link_tag['href']
 
     output_filename = f'{output_dirname}/{chapter_number}) {chapter_title.get_text(strip=True)}.html'
 

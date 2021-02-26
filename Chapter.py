@@ -12,6 +12,8 @@ def save(chapter_title, chapter_number, main_page_html):
 
     links_to_articles = []
     for article_a_tag in a_tags_in_chapter:
+        if article_a_tag['href'][0] != '/':
+            continue
         links_to_articles.append(f'https://laravel.com{article_a_tag["href"]}')
 
     main_page = bs4.BeautifulSoup(main_page_html, 'lxml')

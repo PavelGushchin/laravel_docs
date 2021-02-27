@@ -1,24 +1,36 @@
 import bs4
 import requests
-from copy import copy
 
 
-def get(article_link):
-    article_html = requests.get(article_link).text
-    soup = bs4.BeautifulSoup(article_html, 'lxml', parse_only=bs4.SoupStrainer('body'))
+def get_content(article_link):
+    article_page_html = requests.get(article_link).text
+    article_page = bs4.BeautifulSoup(article_page_html, 'lxml', parse_only=bs4.SoupStrainer('body'))
 
-    article_container = soup.find(class_='docs_main')
-    all_tags_a = article_container.find_all(href=True)
+    article_container = article_page.find(class_='docs_main')
 
-    for a in all_tags_a:
-        if a['href'][0] == '#':
+    # Expanding links, because otherwise we won't see them in our future PDF file
+    old_a_tags = article_container.find_all('a', href=True)
+    for a in old_a_tags:
+        if a['href'].startswith('#'):
             continue
         a.append(f' (***{a["href"]}***) ')
 
-    br_tag = soup.new_tag('br')
-    article_container.append(br_tag)
-    article_container.append(copy(br_tag))
+    # Renaming h tags, because we need h1 tag for Chapter Title, but now it's used for Article Title
+    rename_tag('h4', 'h5', article_page)
+    rename_tag('h3', 'h4', article_page)
+    rename_tag('h2', 'h3', article_page)
+    rename_tag('h1', 'h2', article_page)
 
-    article_tags = [tag for tag in article_container.children if str(tag) != '\n']
+    for i in range(3):
+        article_container.append(article_page.new_tag('br'))
 
-    return article_tags
+    article_content = [tag for tag in article_container.children]
+
+    return article_content
+
+
+def rename_tag(old_tag_name, new_tag_name, page):
+    old_tags = page.find_all(old_tag_name)
+
+    for old_tag in old_tags:
+        old_tag.name = new_tag_name

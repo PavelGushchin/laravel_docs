@@ -9,10 +9,14 @@ After downloading you can open that html file in a browser and manually copy all
 Usage
 -----
 
-If you don't have 'Beautiful Soup 4' library, run the following command:
+To run this project you will need these Python packages: 'Beautiful Soup 4', 'requests' and 'lxml parser'.
+
+If you don't have them, run the following commands:
 
 ```python
 pip3 install beautifulsoup4
+pip3 install requests
+pip3 install lxml
 ```
 
 

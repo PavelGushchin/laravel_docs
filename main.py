@@ -11,4 +11,4 @@ output_filename = "LARAVEL MANUAL " + str(datetime.date.today()) + ".html"
 os.makedirs(output_dir, exist_ok=True)
 
 with open(output_dir + "/" + output_filename, 'w') as file:
-    file.write(str(parsed_site))
+    file.write(parsed_site)

@@ -26,4 +26,4 @@ def parse(laravel_site):
         if link_tag['href'].startswith('/'):
             link_tag['href'] = 'https://laravel.com' + link_tag['href']
 
-    return main_page
+    return str(main_page)
